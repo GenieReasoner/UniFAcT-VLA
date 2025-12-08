@@ -287,7 +287,6 @@
                             <Button href="#benchmark" label="Benchmark" colorName="blue" icon={<Target size={18} />} />
                             <Button href="#" label="GitHub" colorName="gray" icon={<Github size={18} />} />
                             <Button href="#" label="HuggingFace" colorName="yellow" icon={<Database size={18} />} />
-                            <Button href="#" label="WeChat" colorName="green" icon={<MessageCircle size={18} />} />
                         </div>
                     </header>
 
@@ -362,10 +361,7 @@
                             <div>
                                 <h4 className="sans-font font-bold text-textMain mb-3">Design Motivation</h4>
                                 <p className="mb-4">
-                                    We identify that the lack of embodied reasoning is a primary bottleneck for achieving reliable task execution in unstructured environments. Unlike traditional benchmarks that mix control and cognition, AER decouples reasoning faculties to quantify the abstraction needed for generalization.
-                                </p>
-                                <p>
-                                    By serving as a quantitative proxy for embodied intelligence, AER allows us to rigorously correlate VLM cognitive proficiency with downstream physical execution success, effectively enabling a "Reasoning-to-Action" translation measurement.
+                                    We posit that advancing <strong>embodied reasoning</strong> is pivotal for achieving generalization and robustness in unstructured environments. Unlike traditional simulation-based VLA evaluations, AER is designed to <strong>decouple and quantify</strong> task-specific reasoning capabilities, measuring the abstract cognition essential for generalization. By establishing this embodied intelligence evaluation suite, we can rigorously assess the abstract reasoning proficiency of pretrained models. This approach facilitates the optimization of multi-stage training and transforms the iterative development of VLAs into a more controllable and guided process.
                                 </p>
                             </div>
                             <div>
@@ -537,9 +533,11 @@
                                     High-Level: SOTA Embodied Reasoning
                                 </h3>
                             </div>
-                            <p className="text-gray-600 mb-6 text-center">
-                                We first evaluate the reasoning ability of our pretrained model. On the AER benchmark, UniFACT-ER significantly outperforms baselines including close-sourced Gemini and GPT.
-                            </p>
+                            <div className="mb-8 max-w-4xl mx-auto text-justify">
+                                <p className="text-gray-600 mb-6">
+                                    We first evaluate the reasoning ability of our pretrained model. On the AER benchmark, UniFACT-ER significantly outperforms baselines including close-sourced Gemini and GPT.
+                                </p>
+                            </div>
                             <div className="overflow-x-auto border border-gray-200 rounded-lg shadow-sm">
                                 <table className="academic-table min-w-[1000px]">
                                     <thead><tr><th className="sticky left-0 bg-gray-50 z-10 text-left pl-4">Model</th><th>Scene</th><th>Dual</th><th>Task</th><th>Rel.Pos</th><th>Action</th><th>Success</th><th>Subtask</th><th>Reason</th><th>Traj</th><th>Progress</th><th>Intention</th><th>Interact</th><th>Mistake</th><th>Classify</th><th>Recover</th><th className="sticky right-0 bg-blue-50 text-blue-700 z-10 border-l border-blue-100">Avg</th></tr></thead>
