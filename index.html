@@ -32,7 +32,8 @@
     
     <script src="https://unpkg.com/lucide@latest"></script>
     
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:wght@300;400;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <!-- Updated Fonts: Added weight 800 and 900 for extra boldness -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Merriweather:wght@300;400;700;900&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
     
     <style>
         body { 
@@ -43,8 +44,14 @@
             -webkit-font-smoothing: antialiased;
         }
         
-        h1, h2, h3, h4, h5, h6, button, .sans-font {
+        h1, h2, h3, h4, h5, h6, button, .sans-font, nav {
             font-family: 'Inter', sans-serif;
+        }
+
+        /* 2. ENHANCED BOLD TEXT: Global override to make bold text much stronger */
+        strong, b, .font-bold {
+            font-weight: 800 !important; /* Extra Bold */
+            color: #000000 !important;   /* Pure Black for contrast */
         }
         
         .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
@@ -72,9 +79,9 @@
         .academic-table th { 
             border-bottom: 2px solid #1a1a1a; 
             padding: 12px 8px; 
-            font-weight: 600; 
+            font-weight: 800; /* Bolder headers */
             text-align: center; 
-            color: #111;
+            color: #000;
             background-color: #f9fafb;
             white-space: nowrap;
         }
@@ -87,7 +94,7 @@
         .academic-table tr:last-child td { border-bottom: 2px solid #1a1a1a; }
         .academic-table .row-title { text-align: left; font-weight: 600; color: #1a1a1a; padding-left: 12px; }
         .academic-table .highlight-row { background-color: #eff6ff; }
-        .academic-table .highlight-cell { color: #2563eb; font-weight: 700; }
+        .academic-table .highlight-cell { color: #2563eb; font-weight: 800; }
         
         .section-divider { border-bottom: 1px solid #e5e7eb; margin: 4rem 0; }
         .video-card-title {
@@ -100,7 +107,7 @@
         .bar { width: 100%; border-radius: 4px 4px 0 0; position: relative; transition: height 0.5s ease; min-width: 24px; }
         .bar:hover { opacity: 0.9; }
         .bar-label { font-size: 11px; text-align: center; margin-top: 10px; color: #666; font-family: 'Inter', sans-serif; font-weight: 500; line-height: 1.2; }
-        .bar-value { position: absolute; top: -24px; width: 100%; text-align: center; font-size: 11px; font-weight: bold; font-family: 'JetBrains Mono', monospace; color: #333; }
+        .bar-value { position: absolute; top: -24px; width: 100%; text-align: center; font-size: 11px; font-weight: 800; font-family: 'JetBrains Mono', monospace; color: #000; }
         
         /* Step Badge */
         .step-badge {
@@ -112,21 +119,42 @@
             align-items: center; 
             justify-content: center; 
             font-family: 'Inter', sans-serif;
-            font-weight: 700;
+            font-weight: 800;
             font-size: 16px;
             flex-shrink: 0;
             border: 1px solid #dbeafe;
         }
 
         /* X Mark for Table */
-        .x-mark { color: #ef4444; font-weight: bold; }
-        .check-mark { color: #22c55e; font-weight: bold; }
+        .x-mark { color: #ef4444; font-weight: 800; }
+        .check-mark { color: #22c55e; font-weight: 800; }
         
         /* Custom Range Input Style */
         input[type=range]::-webkit-slider-thumb {
             -webkit-appearance: none;
             width: 0;
             height: 0;
+        }
+
+        /* Nav Link Hover Effect */
+        .nav-link {
+            position: relative;
+            color: #4b5563;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem; /* Slightly larger for readability */
+            transition: color 0.2s;
+        }
+        .nav-link:hover {
+            color: #1a1a1a;
+        }
+        
+        /* AgiBot Logo Fallback Style */
+        .logo-fallback {
+            font-family: 'Inter', sans-serif;
+            font-weight: 900;
+            font-style: italic;
+            letter-spacing: -1px;
         }
     </style>
 </head>
@@ -137,37 +165,23 @@
         const { useState, useEffect, useRef } = React;
         
         // --- Icons Wrapper ---
-        // FIXED: Refactored to prevent React hydration/re-render errors caused by Lucide DOM manipulation
         const IconWrapper = ({ name, size = 24, className }) => {
             const ref = useRef(null);
-            
             useEffect(() => {
                 if (!ref.current || !window.lucide) return;
-                
-                // 1. Clean container
                 ref.current.innerHTML = '';
-                
-                // 2. Create raw element for Lucide to process
                 const i = document.createElement('i');
                 i.setAttribute('data-lucide', name);
                 i.setAttribute('width', size);
                 i.setAttribute('height', size);
                 if (className) i.setAttribute('class', className);
-                
                 ref.current.appendChild(i);
-                
-                // 3. Trigger Lucide only on this specific element
                 window.lucide.createIcons({
                     root: ref.current,
                     nameAttr: 'data-lucide',
-                    attrs: {
-                        width: size, 
-                        height: size, 
-                        class: className 
-                    }
+                    attrs: { width: size, height: size, class: className }
                 });
-            }, [name, size, className]); // Re-run when props change
-
+            }, [name, size, className]);
             return <span ref={ref} className={`inline-flex items-center justify-center ${className || ''}`} style={{ width: size, height: size }}></span>;
         };
 
@@ -175,10 +189,10 @@
         const Github = (props) => <IconWrapper name="github" {...props} />;
         const Database = (props) => <IconWrapper name="database" {...props} />;
         const Target = (props) => <IconWrapper name="target" {...props} />;
-        const MessageCircle = (props) => <IconWrapper name="message-circle" {...props} />;
-        // Added Audio Icons
         const Volume2 = (props) => <IconWrapper name="volume-2" {...props} />;
         const VolumeX = (props) => <IconWrapper name="volume-x" {...props} />;
+        const Info = (props) => <IconWrapper name="info" {...props} />;
+        const Bot = (props) => <IconWrapper name="bot" {...props} />;
 
         // --- Data Constants ---
         const COLORS = {
@@ -238,7 +252,65 @@
 
         // --- UI Components ---
 
-        // Video Player Component with Global Audio State Control & Progress Bar
+        // 3. UPDATED: Navigation with AgiBot & About Us
+        const Navigation = () => {
+            const [logoError, setLogoError] = useState(false);
+            // Removed aboutIconError state as we switched to text-only
+
+            return (
+                <nav className="sticky top-0 z-50 w-full bg-white/80 backdrop-blur-md border-b border-gray-200/50 shadow-sm">
+                    <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+                        {/* Left Side: Logos & Title - Highly Occupy Banner */}
+                        <div className="flex items-center gap-6 h-full">
+                            {/* AgiBot Logo / Link - Maximized Height */}
+                            <a href="https://www.agibot.com" target="_blank" className="group h-full flex items-center opacity-90 hover:opacity-100 transition-opacity py-1">
+                                {!logoError ? (
+                                    <img 
+                                        src="./figs/agibot_logo.png" 
+                                        alt="AgiBot" 
+                                        className="h-9 w-auto object-contain" // Increased height to fill banner better
+                                        onError={() => setLogoError(true)} 
+                                    />
+                                ) : (
+                                    <div className="flex items-center gap-1.5 text-textMain h-full">
+                                        <Bot size={28} className="text-black" />
+                                        <span className="logo-fallback text-xl">AgiBot</span>
+                                    </div>
+                                )}
+                            </a>
+                            
+                            {/* Divider - Taller */}
+                            <div className="h-8 w-px bg-gray-300"></div>
+
+                            {/* Project Title - Larger */}
+                            <a href="#" className="font-bold text-xl tracking-tight text-textMain hover:text-brand transition-colors">
+                                UniFACT
+                            </a>
+                        </div>
+
+                        {/* Right Side: Navigation Links & About Us */}
+                        <div className="flex items-center gap-1 md:gap-8">
+                            <div className="hidden md:flex items-center gap-8">
+                                <a href="#demos" className="nav-link">Demos</a>
+                                <a href="#benchmark" className="nav-link">Benchmark</a>
+                                <a href="#methodology" className="nav-link">Methodology</a>
+                                <a href="#experiments" className="nav-link">Results</a>
+                            </div>
+                            
+                            {/* About Us Button - Simplified to Plain Text Link */}
+                            <a 
+                                href="https://www.agibot.com" 
+                                target="_blank" 
+                                className="nav-link font-bold text-textMain hover:text-brand transition-colors ml-2"
+                            >
+                                About Us
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            );
+        };
+
         const VideoPlayer = ({ src, label, children, className, id, activeVideoId, onToggleAudio }) => {
             const videoRef = useRef(null);
             const [progress, setProgress] = useState(0);
@@ -287,30 +359,24 @@
                         onTimeUpdate={handleTimeUpdate}
                     />
                     
-                    {/* Label Badge (Top Left) */}
                     {label && (
                         <div className="absolute top-2 left-2 px-2 py-1 bg-black/60 text-white text-[10px] font-bold uppercase rounded backdrop-blur-sm border border-white/10 pointer-events-none z-10">
                             {label}
                         </div>
                     )}
 
-                    {/* Mute Toggle Button (Top Right) - Perfect Circle */}
                     <div className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-black/50 hover:bg-black/80 rounded-full text-white backdrop-blur-sm transition-all duration-300 z-10 scale-75 opacity-0 group-hover:scale-100 group-hover:opacity-100 shadow-lg border border-white/10">
                         {isUnmuted ? <Volume2 size={16} /> : <VolumeX size={16} />}
                     </div>
 
-                    {/* Progress Bar (Bottom) - Draggable */}
                     <div 
                         className="absolute bottom-0 left-0 w-full h-1.5 bg-gray-700/50 z-30 transition-all duration-200 group-hover:h-2"
                         onClick={(e) => e.stopPropagation()}
                     >
-                        {/* Buffered/Background bar handled by container bg */}
-                        {/* Active Progress */}
                         <div 
                             className="absolute top-0 left-0 h-full bg-blue-500 rounded-r-sm pointer-events-none" 
                             style={{ width: `${progress}%` }} 
                         />
-                        {/* Interactive Input Range (Invisible but clickable) */}
                         <input 
                             type="range" 
                             min="0" 
@@ -321,8 +387,6 @@
                             className="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
                         />
                     </div>
-
-                    {/* Children overlays (Titles, etc.) */}
                     {children}
                 </div>
             );
@@ -385,8 +449,26 @@
 
             // Global Audio State
             const [activeVideoId, setActiveVideoId] = useState(null);
+            
+            // 1. SCROLL REFS: Store refs to scroll containers
+            const scrollRefs = useRef({});
 
-            // Handler to toggle audio for a specific video ID
+            // 1. SCROLL EFFECT: Center 'generalization' on mount
+            useEffect(() => {
+                const genContainer = scrollRefs.current['generalization'];
+                if (genContainer) {
+                    // Calculate center position: (Total Width - Viewport Width) / 2
+                    // This centers the middle of the scrollable content in the viewport
+                    const centerPos = (genContainer.scrollWidth - genContainer.clientWidth) / 2;
+                    
+                    // Smooth scroll to center
+                    genContainer.scrollTo({
+                        left: centerPos,
+                        behavior: 'smooth' 
+                    });
+                }
+            }, []);
+
             const handleToggleAudio = (id) => {
                 setActiveVideoId(prevId => prevId === id ? null : id);
             };
@@ -395,8 +477,10 @@
 
             return (
                 <div className="bg-white min-h-screen">
+                    {/* 3. Added Navigation Bar */}
+                    <Navigation />
                     
-                    <header className="pt-20 pb-16 px-6 max-w-5xl mx-auto text-center border-b border-gray-100">
+                    <header className="pt-10 pb-16 px-6 max-w-5xl mx-auto text-center border-b border-gray-100">
                         <h1 className="sans-font text-4xl md:text-6xl font-bold text-textMain mb-6 tracking-tighter leading-[1.1]">
                             UniFACT-VLA & AER-bmk
                         </h1>
@@ -415,7 +499,6 @@
                             <div className="text-textMuted text-sm mt-1">AgiBot Research</div>
                         </div>
 
-                        {/* Revised Horizontal Buttons */}
                         <div className="flex justify-center gap-4 flex-wrap mt-8">
                             <Button href="#" label="Arxiv" colorName="red" icon={<FileText size={18} />} />
                             <Button href="#benchmark" label="Benchmark" colorName="blue" icon={<Target size={18} />} />
@@ -424,7 +507,6 @@
                         </div>
                     </header>
 
-                    {/* Figure 1 */}
                     <div className="max-w-5xl mx-auto px-6 mb-12 mt-12">
                         <div className="relative bg-white rounded-lg overflow-hidden shadow-xl border border-gray-200 group">
                              <SmartImage src="./figs/fig1_vis.png" alt="Main Teaser Figure" className="w-full h-auto" fallbackText="[Figure 1: Visualization]" />
@@ -432,19 +514,18 @@
                     </div>
 
                     {/* Videos */}
-                    <section className="max-w-7xl mx-auto px-6 mb-20">
+                    <section id="demos" className="max-w-7xl mx-auto px-6 mb-20 scroll-mt-20">
                         {DEMO_CATEGORIES.map(cat => (
                             <div key={cat.id} className="mb-12">
                                 <h4 className="sans-font font-bold text-sm md:text-base uppercase text-gray-500 tracking-wider mb-6 border-b border-gray-100 pb-2 text-center">
                                     {cat.label}
                                 </h4>
-                                {/* UPDATED: Dynamic alignment based on video count. 
-                                    If videos <= 2: Center align on desktop (md:justify-center)
-                                    If videos > 2: Left align (default) to allow scrolling from start
-                                */}
-                                <div className={`flex overflow-x-auto gap-6 pb-4 snap-x snap-mandatory custom-scrollbar pl-2 ${DEMO_ITEMS[cat.id]?.length > 2 ? '' : 'md:justify-center'}`}>
+                                <div 
+                                    /* 1. Added ref to the specific container */
+                                    ref={el => scrollRefs.current[cat.id] = el}
+                                    className={`flex overflow-x-auto gap-6 pb-4 snap-x snap-mandatory custom-scrollbar pl-2 ${DEMO_ITEMS[cat.id]?.length > 2 ? '' : 'md:justify-center'}`}
+                                >
                                     {DEMO_ITEMS[cat.id]?.map((item, idx) => {
-                                        // Standard unique ID generation
                                         const baseId = `${cat.id}-${idx}`;
 
                                         if (cat.id === 'generalization') {
@@ -452,7 +533,6 @@
                                                 <div key={idx} className="flex-none w-[85vw] md:w-[45%] snap-center">
                                                     <div className="group relative aspect-[32/27] bg-black rounded-lg overflow-hidden border border-gray-200 shadow-sm hover:shadow-md transition-shadow grid grid-rows-2">
                                                         <div className="relative border-b border-white/10 overflow-hidden">
-                                                            {/* REMOVED label="3rd Person" */}
                                                             <VideoPlayer 
                                                                 src={item.src} 
                                                                 id={`${baseId}-3rd`}
@@ -461,14 +541,12 @@
                                                             />
                                                         </div>
                                                         <div className="relative overflow-hidden">
-                                                            {/* REMOVED label="1st Person" */}
                                                             <VideoPlayer 
                                                                 src={item.src_fpv || item.src} 
                                                                 id={`${baseId}-1st`}
                                                                 activeVideoId={activeVideoId}
                                                                 onToggleAudio={handleToggleAudio}
                                                             >
-                                                                {/* Adjusted padding and text size for longer descriptions */}
                                                                 <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 via-black/60 to-transparent pointer-events-none">
                                                                     <h5 className="text-white text-sm font-bold sans-font text-shadow leading-tight mb-1">{item.title}</h5>
                                                                     <p className="text-gray-200 text-[11px] leading-snug opacity-90">{item.desc}</p>
@@ -505,7 +583,7 @@
                     <div className="section-divider max-w-5xl mx-auto"></div>
 
                     {/* AER Benchmark Section */}
-                    <section id="benchmark" className="max-w-7xl mx-auto px-6 mb-24">
+                    <section id="benchmark" className="max-w-7xl mx-auto px-6 mb-24 scroll-mt-20">
                         <SectionHeader 
                             title="AgiBot Embodied Reasoning (AER) Benchmark" 
                         />
@@ -594,7 +672,7 @@
                     <div className="section-divider max-w-5xl mx-auto"></div>
 
                     {/* Methodology Section */}
-                    <section id="methodology" className="max-w-6xl mx-auto px-6 mb-24">
+                    <section id="methodology" className="max-w-6xl mx-auto px-6 mb-24 scroll-mt-20">
                         <SectionHeader 
                             title="Methodology: UniFACT-VLA" 
                             subtitle="Aligning Reasoning and Action in a Shared Space"
@@ -684,7 +762,7 @@
                     <div className="section-divider max-w-5xl mx-auto"></div>
 
                     {/* Experimental Results */}
-                    <section id="experiments" className="max-w-6xl mx-auto px-6 mb-24">
+                    <section id="experiments" className="max-w-6xl mx-auto px-6 mb-24 scroll-mt-20">
                         <SectionHeader title="Experiment Results" />
 
                         {/* Step 1: The Brain */}
