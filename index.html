@@ -442,7 +442,10 @@
 
                     {/* Methodology Section */}
                     <section id="methodology" className="max-w-6xl mx-auto px-6 mb-24">
-                        <SectionHeader title="Methodology: UniFACT-VLA" />
+                        <SectionHeader 
+                            title="Methodology: UniFACT-VLA" 
+                            subtitle="Aligning Reasoning and Action in a Shared Space"
+                        />
                         
                         <div className="mb-20">
                             <div className="bg-white border border-gray-200 rounded-xl p-2 mb-8 shadow-sm">
@@ -451,10 +454,16 @@
                             
                             <div className="max-w-4xl mx-auto text-justify text-gray-600 space-y-6">
                                 <p>
-                                    Possessing a VLM with robust embodied reasoning is only half the equation; seamlessly translating this reasoning into high-precision control without losing generalizability presents a distinct architectural hurdle.
+                                    Possessing a VLM with robust embodied reasoning is only half the equation; seamlessly translating this reasoning into high-precision control without losing generalizability presents a distinct hurdle.
                                 </p>
                                 <p>
-                                    Leading approaches typically append a continuous diffusion or flow-matching head to the discrete VLM backbone. We identify a critical flaw in this hybrid design: the optimization of continuous trajectory generation produces gradients that are mathematically incongruent with the VLM's discrete token prediction. This results in gradient interference, which actively damages the model's inherent reasoning capabilities—the very source of its generalization power—during training.
+                                    Current VLA systems often suffer from a "split brain" problem. They attach continuous diffusion heads to discrete VLMs, creating <strong>gradient interference</strong> that damages the model's reasoning capabilities during training.
+                                </p>
+                                <p>
+                                    We introduce <strong>UniFACT-VLA</strong>, a unified architecture that treats physical action not as a separate regression task, but as a "foreign language" for the VLM.
+                                </p>
+                                <p>
+                                    By discretizing robot actions into tokens, we align the action space with the reasoning space. This enables the model to be optimized with a single auto-regressive objective—allowing high-level <strong>Embodied Reasoning</strong> to flow seamlessly into low-level control without conflict.
                                 </p>
                             </div>
                         </div>
@@ -465,7 +474,7 @@
                             </h3>
                             
                             <p className="text-gray-600 leading-relaxed mb-10 text-lg w-full text-center">
-                                To resolve the discrete-continuous conflict, we propose <strong>UniFACT</strong>. It encodes continuous action into discrete tokens, thereby aligning the action space with the VLM reasoning space.
+                                UniFACT encodes continuous actions into discrete tokens to align with the VLM, utilizing Flow Matching to reconstruct high-fidelity trajectories from the quantized representation.
                             </p>
                             
                             <div className="flex flex-col lg:flex-row gap-12 items-center">
@@ -478,14 +487,14 @@
                                     <div className="border-l-4 border-brand pl-6 py-2">
                                         <h4 className="sans-font font-bold text-lg text-textMain mb-2">VQ-Encoder</h4>
                                         <p className="text-sm text-textMuted leading-relaxed">
-                                            Maps continuous action chunks into compact discrete codes using <strong>bitwise quantization</strong>. This creates a vocabulary compatible with the VLM's autoregressive generation.
+                                            Built on the MM-DiT architecture, it compresses continuous action chunks into <strong>compact discrete tokens</strong>. This transforms complex physical dynamics into a unified vocabulary compatible with the VLM.
                                         </p>
                                     </div>
                                     
                                     <div className="border-l-4 border-purple-500 pl-6 py-2">
                                         <h4 className="sans-font font-bold text-lg text-textMain mb-2">Flow-Matching Decoder</h4>
                                         <p className="text-sm text-textMuted leading-relaxed">
-                                            Reconstructs high-fidelity continuous trajectories from the discrete tokens. It learns a <strong>straight-line velocity field</strong> to transport noise to the target action distribution, ensuring smoothness and precision.
+                                            Leveraging an MM-DiT backbone, it utilizes <strong>Flow Matching</strong> to reconstruct high-fidelity trajectories from discrete tokens. This design ensures smooth, precise motion recovery despite the discrete bottleneck.
                                         </p>
                                     </div>
                                 </div>
@@ -498,13 +507,13 @@
                                         <li className="flex gap-4">
                                             <div>
                                                 <strong className="block text-sm font-semibold text-gray-900 mb-1">High Fidelity</strong>
-                                                <span className="text-sm text-textMuted">Achieves an <span className="text-green-600 font-semibold">order-of-magnitude lower MSE</span> compared to FAST+ and simple binning. Unlike simple uniform quantization which introduces significant errors, our Flow-Matching decoder reconstructs smooth, physically feasible trajectories.</span>
+                                                <span className="text-sm text-textMuted">UniFACT achieves an <strong>order-of-magnitude lower MSE</strong> than FAST+ and significantly smaller tokens than simple binning. Its MM-DiT Flow-Matching decoder eliminates quantization artifacts, reconstructing smooth, continuous trajectories to ensure sub-millimeter precision.</span>
                                             </div>
                                         </li>
                                         <li className="flex gap-4">
                                             <div>
                                                 <strong className="block text-sm font-semibold text-gray-900 mb-1">Unified Space</strong>
-                                                <span className="text-sm text-textMuted">Enables end-to-end autoregressive training without gradient conflicts common in diffusion-hybrid heads. By discretizing actions, we avoid the gradient interference that actively damages the model's inherent reasoning capabilities during training.</span>
+                                                <span className="text-sm text-textMuted">Resolves the <strong>gradient interference</strong> that plagues hybrid architectures. By treating actions as discrete tokens, UniFACT aligns the action space with the VLM's reasoning space, allowing both to be co-optimized within a <strong>shared gradient space</strong>.</span>
                                             </div>
                                         </li>
                                     </ul>
